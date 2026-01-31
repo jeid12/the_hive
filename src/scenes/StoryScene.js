@@ -10,11 +10,12 @@ export default class StoryScene extends Phaser.Scene {
 
     // Title
     this.add.text(400, 80, 'THE LEGEND OF THE SACRED MASK', {
-      fontSize: '24px',
+      fontSize: '32px',
+      fontFamily: '"Sankofa Display", sans-serif',
       color: '#d4af37',
       fontStyle: 'bold',
       stroke: '#000',
-      strokeThickness: 4
+      strokeThickness: 5
     }).setOrigin(0.5)
 
     // Story text
@@ -31,20 +32,20 @@ The Ancient Forest
 The Sacred Mountain
 
 You must journey through each realm and recover
-the pieces to restore peace to the kingdom.
+the pieces to restore peace to the kingdom.`
 
-Click to begin your quest...`
-
-    this.add.text(400, 280, storyText, {
-      fontSize: '16px',
+    this.add.text(400, 260, storyText, {
+      fontSize: '18px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#ffffff',
       align: 'center',
       lineSpacing: 8
     }).setOrigin(0.5)
 
     // Pulsing effect on "Click to begin"
-    const clickText = this.add.text(400, 430, '▼ CLICK TO BEGIN ▼', {
-      fontSize: '14px',
+    const clickText = this.add.text(400, 420, '▼ CLICK TO BEGIN QUEST ▼', {
+      fontSize: '20px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#d4af37'
     }).setOrigin(0.5)
 
@@ -57,6 +58,9 @@ Click to begin your quest...`
     })
 
     this.input.once('pointerdown', () => {
+      if (this.cache.audio.exists('buttonClick')) {
+        this.sound.play('buttonClick')
+      }
       this.scene.start('GameScene')
     })
   }

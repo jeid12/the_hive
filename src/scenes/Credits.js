@@ -8,7 +8,8 @@ export default class Credits extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#0a0a0a')
 
     this.add.text(400, 100, 'CREDITS', {
-      fontSize: '32px',
+      fontSize: '40px',
+      fontFamily: '"Sankofa Display", sans-serif',
       color: '#d4af37',
       fontStyle: 'bold'
     }).setOrigin(0.5)
@@ -27,14 +28,16 @@ Created for Global Game Jam
 Thank you for playing!`
 
     this.add.text(400, 250, creditsText, {
-      fontSize: '16px',
+      fontSize: '18px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#ffffff',
       align: 'center',
       lineSpacing: 10
     }).setOrigin(0.5)
 
     const menuBtn = this.add.text(400, 410, 'BACK TO MENU', {
-      fontSize: '20px',
+      fontSize: '22px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#d4af37',
       backgroundColor: '#000000',
       padding: { x: 20, y: 10 }
@@ -49,6 +52,9 @@ Thank you for playing!`
     })
 
     menuBtn.on('pointerdown', () => {
+      if (this.cache.audio.exists('buttonClick')) {
+        this.sound.play('buttonClick')
+      }
       this.scene.start('MainMenu')
     })
   }

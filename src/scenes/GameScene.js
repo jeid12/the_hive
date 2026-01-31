@@ -7,7 +7,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // Total world is 4 screens wide (3200x450)
+    const { width, height } = this.scale
     const worldWidth = 3200
     const worldHeight = 450
     const screenWidth = 800
@@ -26,22 +26,36 @@ export default class GameScene extends Phaser.Scene {
     this.uiContainer = this.add.container(0, 0).setScrollFactor(0).setDepth(100)
 
     this.envText = this.add.text(10, 10, 'Env: Savannah', {
-      fontSize: '18px', fill: '#fff', stroke: '#000', strokeThickness: 3
+      fontSize: '22px',
+      fontFamily: '"Agbalumo", cursive',
+      fill: '#d4af37',
+      stroke: '#000',
+      strokeThickness: 3
     })
     this.uiContainer.add(this.envText)
 
-    this.maskText = this.add.text(10, 35, `Masks: 0/${gameState.totalPieces}`, {
-      fontSize: '18px', fill: '#fff', stroke: '#000', strokeThickness: 3
+    this.maskText = this.add.text(10, 38, `Masks: 0/${gameState.totalPieces}`, {
+      fontSize: '22px',
+      fontFamily: '"Agbalumo", cursive',
+      fill: '#d4af37',
+      stroke: '#000',
+      strokeThickness: 3
     })
     this.uiContainer.add(this.maskText)
 
-    const infoText = this.add.text(10, 60, 'Arrow Keys to Move | Avoid Red Enemies!', {
-      fontSize: '14px', fill: '#fff', stroke: '#000', strokeThickness: 2
-    })
+    const infoText = this.add.text(width / 2, height - 30, 'Arrow Keys to Move | Avoid Red Enemies!', {
+      fontSize: '18px',
+      fontFamily: '"Agbalumo", cursive',
+      fill: '#fff',
+      stroke: '#000',
+      strokeThickness: 2
+    }).setOrigin(0.5).setScrollFactor(0)
     this.uiContainer.add(infoText)
 
-    this.posText = this.add.text(10, 80, 'X: 0 Y: 0', {
-      fontSize: '14px', fill: '#ffff00'
+    this.posText = this.add.text(width - 100, 10, 'X: 0 Y: 0', {
+      fontSize: '14px',
+      fontFamily: '"Agbalumo", cursive',
+      fill: '#ffff00'
     })
     this.uiContainer.add(this.posText)
 
@@ -109,6 +123,14 @@ export default class GameScene extends Phaser.Scene {
 
     // Set camera to initial screen
     this.cameras.main.setScroll(0, 0)
+
+    // Ensure Background Music is playing
+    if (this.cache.audio.exists('bgMusic')) {
+      const bgMusic = this.sound.get('bgMusic') || this.sound.add('bgMusic', { loop: true, volume: 0.4 })
+      if (!bgMusic.isPlaying) {
+        bgMusic.play()
+      }
+    }
   }
 
   update() {
@@ -177,6 +199,11 @@ export default class GameScene extends Phaser.Scene {
     mask.destroy()
     gameState.maskPieces++
 
+    // Play collection sound
+    if (this.cache.audio.exists('collectSound')) {
+      this.sound.play('collectSound', { volume: 0.8 })
+    }
+
     if (this.maskText) {
       this.maskText.setText(`Masks: ${gameState.maskPieces}/${gameState.totalPieces}`)
     }
@@ -208,12 +235,22 @@ export default class GameScene extends Phaser.Scene {
     player.setTint(0xff0000)
     this.cameras.main.shake(300, 0.02)
 
+    // Play hit sound
+    if (this.cache.audio.exists('hitSound')) {
+      this.sound.play('hitSound', { volume: 0.7 })
+    }
+
     // Red flash
     const flash = this.add.rectangle(400, 225, 800, 450, 0xff0000, 0.5).setScrollFactor(0).setDepth(99)
     this.tweens.add({ targets: flash, alpha: 0, duration: 300, onComplete: () => flash.destroy() })
 
     this.add.text(400, 225, 'HIT!', {
-      fontSize: '48px', color: '#ff0000', stroke: '#000', strokeThickness: 6, fontStyle: 'bold'
+      fontSize: '64px',
+      fontFamily: '"Sankofa Display", sans-serif',
+      color: '#ff0000',
+      stroke: '#000',
+      strokeThickness: 6,
+      fontStyle: 'bold'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(100)
 
     this.time.delayedCall(1000, () => {

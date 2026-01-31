@@ -9,7 +9,8 @@ export default class EndStory extends Phaser.Scene {
 
     // Victory title
     this.add.text(400, 60, '✦ VICTORY ✦', {
-      fontSize: '40px',
+      fontSize: '48px',
+      fontFamily: '"Sankofa Display", sans-serif',
       color: '#d4af37',
       fontStyle: 'bold',
       stroke: '#000',
@@ -37,14 +38,16 @@ The ancestors smile upon you, brave hero.
 Your name will be remembered forever.`
 
     this.add.text(400, 260, endText, {
-      fontSize: '15px',
+      fontSize: '16px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#ffffff',
       align: 'center',
       lineSpacing: 6
     }).setOrigin(0.5)
 
     const continueText = this.add.text(400, 430, 'Click to see credits', {
-      fontSize: '14px',
+      fontSize: '18px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#d4af37'
     }).setOrigin(0.5)
 
@@ -57,7 +60,18 @@ Your name will be remembered forever.`
     })
 
     this.input.once('pointerdown', () => {
+      if (this.cache.audio.exists('buttonClick')) {
+        this.sound.play('buttonClick')
+      }
       this.scene.start('Credits')
     })
+
+    // Ensure music is playing
+    if (this.cache.audio.exists('bgMusic')) {
+      const bgMusic = this.sound.get('bgMusic') || this.sound.add('bgMusic', { loop: true, volume: 0.4 })
+      if (!bgMusic.isPlaying) {
+        bgMusic.play()
+      }
+    }
   }
 }
