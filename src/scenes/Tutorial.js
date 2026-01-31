@@ -8,11 +8,12 @@ export default class Tutorial extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#1a0f0a')
 
         this.add.text(400, 50, 'HOW TO PLAY', {
-            fontSize: '36px',
+            fontSize: '40px',
+            fontFamily: '"Sankofa Display", sans-serif',
             color: '#d4af37',
             fontStyle: 'bold',
             stroke: '#000',
-            strokeThickness: 4
+            strokeThickness: 5
         }).setOrigin(0.5)
 
         // Instructions
@@ -32,7 +33,8 @@ Explore by moving left and right
 Try moving around below!`
 
         this.add.text(400, 180, instructions, {
-            fontSize: '16px',
+            fontSize: '18px',
+            fontFamily: '"Agbalumo", cursive',
             color: '#ffffff',
             align: 'center',
             lineSpacing: 8
@@ -48,7 +50,8 @@ Try moving around below!`
         this.cursors = this.input.keyboard.createCursorKeys()
 
         const backBtn = this.add.text(400, 430, 'BACK TO MENU', {
-            fontSize: '20px',
+            fontSize: '22px',
+            fontFamily: '"Agbalumo", cursive',
             color: '#d4af37',
             backgroundColor: '#000000',
             padding: { x: 20, y: 10 }
@@ -63,8 +66,19 @@ Try moving around below!`
         })
 
         backBtn.on('pointerdown', () => {
+            if (this.cache.audio.exists('buttonClick')) {
+                this.sound.play('buttonClick')
+            }
             this.scene.start('MainMenu')
         })
+
+        // Ensure music is playing
+        if (this.cache.audio.exists('bgMusic')) {
+            const bgMusic = this.sound.get('bgMusic') || this.sound.add('bgMusic', { loop: true, volume: 0.4 })
+            if (!bgMusic.isPlaying) {
+                bgMusic.play()
+            }
+        }
     }
 
     update() {

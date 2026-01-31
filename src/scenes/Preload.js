@@ -10,8 +10,9 @@ export default class Preload extends Phaser.Scene {
 
   preload() {
     // Loading text
-    const loadingText = this.add.text(400, 200, 'Loading...', {
+    const loadingText = this.add.text(400, 200, 'Loading Kingdom...', {
       fontSize: '32px',
+      fontFamily: '"Agbalumo", cursive',
       color: '#d4af37',
       fontStyle: 'bold'
     }).setOrigin(0.5)
@@ -45,17 +46,20 @@ export default class Preload extends Phaser.Scene {
       percentText.destroy()
     })
 
-    // placeholders
+    // Initial placeholders
     this.load.image('player', 'assets/player.png')
     this.load.image('ground', 'assets/ground.png')
     this.load.image('maskPiece', 'assets/maskPiece.png')
-    this.load.image('enemy', 'assets/ground.png') // Using ground as enemy placeholder
+    this.load.image('enemy', 'assets/ground.png')
 
-    // TODO: Add sound effects when ready
-    // this.load.audio('collectSound', 'assets/sounds/collect.mp3')
-    // this.load.audio('jumpSound', 'assets/sounds/jump.mp3')
-    // this.load.audio('bgMusic', 'assets/sounds/music.mp3')
-    // this.load.audio('hitSound', 'assets/sounds/hit.mp3')
+    // Audio assets
+    this.load.audio('bgMusic', 'assets/music/backgroundMusic.mp3')
+    this.load.audio('buttonClick', 'assets/music/buttonClick.mp3')
+
+    // Using placeholder for other sounds as requested
+    this.load.audio('collectSound', 'assets/music/placeholder.mp3')
+    this.load.audio('hitSound', 'assets/music/placeholder.mp3')
+    this.load.audio('jumpSound', 'assets/music/placeholder.mp3')
   }
 
   create() {
