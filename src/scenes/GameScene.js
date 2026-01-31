@@ -155,26 +155,43 @@ export default class GameScene extends Phaser.Scene {
   }
 
   collectMask(player, mask) {
-    if (this.isCollecting) return
+    if (this.isCollecting || !mask.active) return
 
-    // Mask collection effect
-    const emitter = this.maskParticles.createEmitter({
-      x: mask.x,
-      y: mask.y,
-      speed: { min: 50, max: 150 },
-      scale: { start: 0.2, end: 0 },
-      lifespan: 800,
-      quantity: 15
-    })
-    emitter.explode()
+    // Position of the collected mask
+    const mx = mask.x
+    const my = mask.y
+
+    try {
+      // Simple particle burst compatible with all Phaser 3 versions
+      if (this.maskParticles) {
+        if (this.maskParticles.emitParticleAt) {
+          this.maskParticles.emitParticleAt(mx, my, 15) // Phaser 3.60+
+        } else if (this.maskParticles.explode) {
+          this.maskParticles.explode(15, mx, my) // Phaser < 3.60
+        }
+      }
+    } catch (e) {
+      console.warn("Particle effect failed:", e)
+    }
 
     mask.destroy()
     gameState.maskPieces++
-    this.maskText.setText(`Masks: ${gameState.maskPieces}/${gameState.totalPieces}`)
 
-    // Celebration flash
-    const flash = this.add.rectangle(400, 225, 800, 450, 0xffffff, 0.4).setScrollFactor(0).setDepth(99)
-    this.tweens.add({ targets: flash, alpha: 0, duration: 300, onComplete: () => flash.destroy() })
+    if (this.maskText) {
+      this.maskText.setText(`Masks: ${gameState.maskPieces}/${gameState.totalPieces}`)
+    }
+
+    try {
+      const flash = this.add.rectangle(400, 225, 800, 450, 0xffffff, 0.4).setScrollFactor(0).setDepth(99)
+      this.tweens.add({
+        targets: flash,
+        alpha: 0,
+        duration: 300,
+        onComplete: () => flash.destroy()
+      })
+    } catch (e) {
+      console.warn("Flash effect failed:", e)
+    }
 
     if (gameState.maskPieces >= gameState.totalPieces) {
       this.isCollecting = true
